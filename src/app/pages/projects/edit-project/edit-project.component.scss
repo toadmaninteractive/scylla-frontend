@@ -1,0 +1,258 @@
+:host ::ng-deep .form-card {
+    .mat-form-field-appearance-fill .mat-form-field-wrapper {
+        margin-bottom: 0;
+    }
+}
+
+.form-card {
+    width: 35%;
+    padding: 36px 18px 18px 18px;
+}
+
+:host ::ng-deep {
+    .ant-tabs-tabpane {
+        position: relative;
+    }
+
+    .ant-upload.ant-upload-drag {
+        border: none;
+    }
+
+    .ant-upload.ant-upload-drag .ant-upload {
+        padding: 0;
+    }
+
+    .jsoneditor-poweredBy {
+        display: none;
+    }
+
+    .readonly .ace-jsoneditor .ace_scroller {
+        pointer-events: none !important;
+        user-select: none !important;
+    }
+
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+        padding: 2px 0;
+    }
+
+    .ant-collapse-content > .ant-collapse-content-box {
+        padding-left: 5px;
+    }
+
+    .has-error .jsoneditor {
+        border: thin solid red;
+    }
+
+    .json-editor-wrapper.readonly {
+        height: 95%;
+
+        .jsoneditor-outer {
+            height: calc(100vh - 272px);
+        }
+    }
+
+    .json-editor-wrapper.sneak-peek {
+        height: 70%;
+        margin-top: 20px;
+
+        .jsoneditor-outer {
+            height: calc(100vh - 340px);
+        }
+    }
+
+    .json-editor-wrapper.upload {
+        margin-top: 20px;
+
+        .jsoneditor-outer {
+            height: calc(100vh - 332px);
+        }
+    }
+
+    .ant-table-pagination.ant-pagination {
+        display: none !important;
+    }
+
+    .hidden-upload-area {
+        .ant-upload.ant-upload-drag {
+            border: none;
+        }
+
+        .ant-upload.ant-upload-drag .ant-upload {
+            padding: 0;
+        }
+    }
+}
+
+.card-container ::ng-deep {
+    p {
+        margin: 0;
+    }
+
+    & > .ant-tabs-card .ant-tabs-content {
+        height: calc(100vh - 136px);
+        margin-top: -16px;
+    }
+
+    & > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
+        background: #fff;
+        padding: 16px;
+    }
+
+    & > .ant-tabs-card > .ant-tabs-nav::before {
+        display: none;
+    }
+
+    & > .ant-tabs-card .ant-tabs-tab {
+        border-color: transparent;
+        background: transparent;
+    }
+
+    & > .ant-tabs-card .ant-tabs-tab-active {
+        border-color: #fff;
+        background: #fff;
+    }
+}
+
+.tab-header {
+    position: relative;
+    padding: 0 16px;
+    margin: 0 -16px;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0.1em;
+        background-color: transparent;
+        box-shadow: rgba(0, 0, 0, 0.07) 0 1px 1px, rgba(0, 0, 0, 0.07) 0 2px 2px, rgba(0, 0, 0, 0.07) 0 4px 4px, rgba(0, 0, 0, 0.07) 0 8px 8px, rgba(0, 0, 0, 0.07) 0 16px 16px;
+        z-index: 1;
+    }
+}
+
+.filter-input {
+    width: 200px;
+    margin-bottom: 16px;
+    transition-delay: 125ms;
+
+    &:hover,
+    &:active,
+    &:focus-within {
+        width: 390px;
+    }
+}
+
+.input {
+    margin-bottom: 16px;
+    transition-delay: 125ms;
+
+    &-count {
+        width: 58px;
+
+        &:hover {
+            width: 80px;
+        }
+    }
+
+    &-filter {
+        width: 200px;
+    }
+}
+
+.input-margin {
+    margin-right: 10px;
+}
+
+.btn-margin {
+    margin: 0 10px;
+}
+
+.collapse-wrapper {
+    overflow: auto;
+    max-height: 92%;
+    margin-top: 9px;
+}
+
+.custom-table {
+    tr > th,
+    tr > td, {
+        padding: 4px 8px;
+    }
+
+    th {
+        user-select: none;
+    }
+}
+
+.ant-collapse {
+    margin: 0 0 4px 0;
+}
+
+.ant-table-wrapper {
+    position: relative;
+
+    &::after {
+        display: none;
+    }
+}
+
+.copy-btn {
+    background-color: transparent;
+    border-color: transparent;
+
+    &_editor-position {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        z-index: 1;
+    }
+
+    &_disabled:active {
+        pointer-events: none;
+    }
+
+    @media (max-width: 740px) {
+        span {
+            display: none;
+        }
+    }
+}
+
+.schema-btn {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+:host ::ng-deep .ant-tabs-tabpane {
+    position: relative;
+}
+
+.copy-btn {
+    background-color: transparent;
+    border-color: transparent;
+
+    &_editor-position {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        z-index: 1;
+    }
+
+    &_disabled:active {
+        pointer-events: none;
+    }
+
+    @media (max-width: 740px) {
+        span {
+            display: none;
+        }
+    }
+}
+
+.spinner-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 96px);
+}

@@ -1,0 +1,31 @@
+:root {
+    --header-height: 44px;
+
+    // Colors
+    --white: hsla(0, 0%, 100%, 1);
+    --light-grey: hsla(0, 0%, 94%, 1);
+    --grey: hsla(240, 2%, 75%, 1);
+    --strong-grey: hsla(210, 14%, 53%, 1);
+    --dark-grey: hsla(230, 2%, 26%, 1);
+    --black: hsla(0, 0%, 8%, 1);
+
+    --white-transparent-50: hsla(0, 0%, 100%, 0.5);
+    --blue-transparent-50: hsla(201, 100%, 86%, 0.5);
+
+    --light-blue: hsla(201, 100%, 86%, 1);
+    --blue: hsla(209, 100%, 55%, 1);
+    --bright-blue: hsla(209, 100%, 65%, 1);
+    --dark-blue: hsla(211, 92%, 44%, 1);
+
+    --red: hsla(359, 100%, 65%, 1);
+    --light-red: hsla(5, 100%, 89%, 1);
+
+    // Border radius's
+    --rounded-4: 4px;
+    --rounded-6: 6px;
+    --rounded-8: 8px;
+    --rounded-10: 10px;
+    --rounded-12: 12px;
+    --rounded-14: 14px;
+    --rounded-50: 50px;
+}

@@ -1,0 +1,12 @@
+<div class="ant-test">
+    <button nz-button nzType="primary">Primary</button>
+</div>
+
+<div class="json-editor-wrapper">
+    <json-editor
+        [options]="editorOptions"
+        style="min-height: 600px"
+        [data]="data!"
+        (change)="onChangeJson($event)"
+    ></json-editor>
+</div>

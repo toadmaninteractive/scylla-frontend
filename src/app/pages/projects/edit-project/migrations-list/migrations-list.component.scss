@@ -1,0 +1,25 @@
+.c-green {
+    color: #50C878;
+}
+
+.c-red {
+    color: #C70039;
+}
+
+.c-navy {
+    color: dodgerblue;
+}
+
+.row-header {
+    position: sticky;
+    top: -16px;
+    background: #fbfbfb;
+    z-index: 10;
+    height: 32px;
+    align-items: center;
+}
+
+:host ::ng-deep .ant-collapse-content-box {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}

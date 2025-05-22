@@ -1,0 +1,52 @@
+<ng-container
+    *ngIf="{
+        clickhouseInstances: clickhouseInstances$.asObservable() | async
+} as x"
+>
+    <nz-card [nzExtra]="createBtn" class="h-full overflow-auto" nzSize="small" nzTitle="Clickhouse instances">
+        <ng-container *ngIf="x.clickhouseInstances">
+            <nz-table
+                #basicTable
+                [nzData]="x.clickhouseInstances"
+                [nzFrontPagination]="false"
+                [nzScroll]="{x: 'true'}"
+                [nzWidthConfig]="widthConfig"
+                nzSize="small"
+            >
+                <thead>
+                    <tr>
+                        <th
+                            *ngFor="let col of displayedColumns"
+                            [class.table-header_disable]="!col.sortFn || x.clickhouseInstances.length < 2"
+                            [nzSortDirections]="col.sortDirections"
+                            [nzSortFn]="col.sortFn"
+                            [nzSortOrder]="col.sortOrder"
+                            class="table-header"
+                        >
+                            {{ col.name }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let instance of basicTable.data">
+                        <td><a routerLink="/clickhouse/{{ instance.code }}/edit">{{ instance.name }}</a></td>
+                        <td>{{ instance.code }}</td>
+                        <td>{{ instance.uri }}</td>
+                        <td>{{ instance.username }}</td>
+                        <td>{{ instance.createdAt | date: 'YYYY-MM-dd HH:mm' }}</td>
+                        <td>{{ instance.updatedAt | date: 'YYYY-MM-dd HH:mm' }}</td>
+                        <td>
+                            <a (click)="onDelete(instance)" class="delete-link" href="javascript:void(null)">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </ng-container>
+    </nz-card>
+</ng-container>
+
+<ng-template #createBtn>
+    <button nz-button nzType="primary" routerLink="create">Create</button>
+</ng-template>

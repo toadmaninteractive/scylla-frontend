@@ -1,0 +1,240 @@
+<ng-container
+    *ngIf="{
+        projectId: projectId$.asObservable() | async,
+        chInstances: chInstances$.asObservable() | async,
+        patch: patch$.asObservable() | async,
+        project: project$.asObservable() | async,
+        isChanged: isChanged$.asObservable() | async,
+        isEditProject: isEditProject$.asObservable() | async,
+        schema: schema$.asObservable() | async
+} as x"
+>
+    <div class="card-container">
+        <nz-tabset
+            (nzSelectChange)="switchTab($event, x.project.code, x.project.name)"
+            [nzSelectedIndex]="activeTab"
+            nzType="card"
+            style="overflow: auto"
+        >
+            <nz-tab nzTitle="Preferences">
+                <ng-container [ngTemplateOutletContext]="{x: x}" [ngTemplateOutlet]="editForm"></ng-container>
+            </nz-tab>
+
+            <ng-container *ngIf="x.isEditProject">
+                <nz-tab nzTitle="Events">
+                    <app-events-list [schema]="x.schema"></app-events-list>
+                </nz-tab>
+
+                <nz-tab nzTitle="Discover Schema">
+                    <app-discover-schema [schema]="x.schema"></app-discover-schema>
+                </nz-tab>
+
+                <nz-tab nzTitle="Upload Schema">
+                    <app-upload-schema
+                        (schemaUploaded)="schemaUploaded()"
+                        [project]="x.project"
+                        [schema]="x.schema"
+                    ></app-upload-schema>
+                </nz-tab>
+
+                <nz-tab nzTitle="Migrations">
+                    <app-migrations-list [project]="x.project"></app-migrations-list>
+                </nz-tab>
+
+                <nz-tab nzTitle="Sneak Peek">
+                    <app-sneak-peak [project]="x.project" [schema]="x.schema"></app-sneak-peak>
+                </nz-tab>
+            </ng-container>
+        </nz-tabset>
+    </div>
+</ng-container>
+
+<ng-template #editForm let-x="x">
+    <div nz-row>
+        <div nz-col nzSpan="10">
+            <nz-card
+                class="h-full overflow-auto"
+                nzSize="small"
+                nzTitle="{{ x.projectId ? 'Preferences' : 'Create project' }}"
+            >
+                <form
+                    [formGroup]="form"
+                    [nzLayout]="'vertical'"
+                    [nzMd]="18"
+                    [nzSm]="18"
+                    [nzXXl]="18"
+                    [nzXl]="18"
+                    nz-col
+                    nz-form
+                >
+                    <nz-form-item>
+                        <nz-form-label nzFor="name" nzRequired nzSpan="24">
+                            <span>Name</span>
+                        </nz-form-label>
+                        <nz-form-control
+                            [nzValidateStatus]="form.get(field.Name)"
+                            nzErrorTip="Name field shouldn't be empty"
+                            nzSpan="24"
+                        >
+                            <input [formControlName]="field.Name" id="name" nz-input />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="code" nzRequired nzSpan="24">
+                            <span>Code</span>
+                        </nz-form-label>
+                        <nz-form-control
+                            [nzValidateStatus]="form.get(field.Code)"
+                            nzErrorTip="Code field shouldn't be empty"
+                            nzSpan="24"
+                        >
+                            <input [formControlName]="field.Code" id="code" nz-input />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="database" nzRequired nzSpan="24">
+                            <span>Clickhouse DB</span>
+                        </nz-form-label>
+                        <nz-form-control
+                            [nzValidateStatus]="form.get(field.ClickhouseDb)"
+                            nzErrorTip="Clickhouse Db field shouldn't be empty"
+                            nzSpan="24"
+                            nzWarningTip="Clickhouse Db shouldn't start with digit and contain special symbols"
+                        >
+                            <input [formControlName]="field.ClickhouseDb" id="database" nz-input />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="instance" nzRequired nzSpan="24">
+                            <span>Clickhouse instance</span>
+                        </nz-form-label>
+                        <nz-form-control
+                            [nzValidateStatus]="form.get(field.ClickhouseInstanceId)"
+                            nzErrorTip="Clickhouse instance shouldn't be empty"
+                            nzSpan="24"
+                        >
+                            <nz-select
+                                [formControlName]="field.ClickhouseInstanceId"
+                                nzPlaceHolder="Select clickhouse instance"
+                            >
+                                <nz-option
+                                    *ngFor="let ch of x.chInstances"
+                                    [nzLabel]="ch.name + ' [' + ch.uri + ']'"
+                                    [nzValue]="ch.id"
+                                ></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="description" nzSpan="24">
+                            <span>Description</span>
+                        </nz-form-label>
+                        <nz-form-control [nzValidateStatus]="form.get(field.Description)" nzDisableAutoTips nzSpan="24">
+                            <input [formControlName]="field.Description" id="description" nz-input />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="event_validation" nzRequired nzSpan="24">
+                            <span>Event validation</span>
+                        </nz-form-label>
+                        <nz-form-control [nzExtra]="eventValidationHint" nzSpan="24">
+                            <nz-select
+                                [formControlName]="field.EventValidation"
+                                nzPlaceHolder="Select event validation value"
+                            >
+                                <nz-option
+                                    *ngFor="let value of eventValValues"
+                                    [nzLabel]="eventValidationEnum[value]"
+                                    [nzValue]="value"
+                                ></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <label [formControlName]="field.PreserveDBColumns" nz-checkbox>
+                            Preserve database columns
+                        </label>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <label [formControlName]="field.BackupMode" nz-checkbox> Backup mode </label>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-control nzSpan="8">
+                            <button
+                                (click)="sendRequest(x.patch, x.projectId)"
+                                [disabled]="!x.isChanged || !form.valid"
+                                nz-button
+                                nzBlock
+                                nzType="primary"
+                            >
+                                {{ x.projectId ? 'Update' : 'Create' }}
+                            </button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+            </nz-card>
+        </div>
+
+        <div nz-col nzSpan="1"></div>
+
+        <div *ngIf="x.isEditProject" nz-col nzSpan="8">
+            <nz-card class="h-full overflow-auto" nzSize="small" nzTitle="Api keys">
+                <nz-form-item *ngIf="project && project.keyRw" [nzGutter]="8" nz-row>
+                    <nz-form-label nzTooltipTitle="Use to read and send events">
+                        <span>Key RW</span>
+                    </nz-form-label>
+
+                    <nz-form-control>
+                        <input [value]="project.keyRw" id="keyRW" nz-input readonly />
+                    </nz-form-control>
+
+                    <nz-form-item>
+                        <button (click)="regenerateKey(x.projectId, key.rw)" nz-button nzType="primary">
+                            Regenerate
+                        </button>
+                    </nz-form-item>
+                </nz-form-item>
+
+                <nz-form-item *ngIf="project && project.keySu" [nzGutter]="8" nz-row>
+                    <nz-form-label nzTooltipTitle="Use to change project preferences and schema">
+                        <span>Key SU</span>
+                    </nz-form-label>
+
+                    <nz-form-control>
+                        <input [value]="project.keySu" id="keySu" nz-input readonly />
+                    </nz-form-control>
+
+                    <nz-form-item>
+                        <button (click)="regenerateKey(x.projectId, key.su)" nz-button nzType="primary">
+                            Regenerate
+                        </button>
+                    </nz-form-item>
+                </nz-form-item>
+            </nz-card>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #eventValidationHint>
+    <ng-container [ngSwitch]="form.get(field.EventValidation).value">
+        <ng-container *ngSwitchCase="eventValidationEnum.Strict">
+            Validate events against the Schema, log errors, and drop invalid events. Pass valid ones to ClickHouse.
+        </ng-container>
+
+        <ng-container *ngSwitchCase="eventValidationEnum.Warn">
+            Validate events against the Schema, log errors. Pass them through to ClickHouse AS IS.
+        </ng-container>
+
+        <ng-container *ngSwitchCase="eventValidationEnum.None">
+            Do not validate events against the Schema. Pass them through to ClickHouse AS IS.
+        </ng-container>
+    </ng-container>
+</ng-template>

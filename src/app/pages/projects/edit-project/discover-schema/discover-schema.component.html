@@ -1,0 +1,14 @@
+<button
+    (click)="copyToClipboard()"
+    [class.copy-btn_disabled]="copyNotification"
+    [nz-tooltip]="copyNotification ? 'Copied!' : 'Copy To Clipboard'"
+    class="copy-btn copy-btn_editor-position"
+    nz-button
+    nzType="primary"
+>
+    <i [nzType]="copyNotification ? 'check' : 'copy'" nz-icon nzTheme="outline"></i>
+    <span>{{ copyNotification ? 'Copied!' : 'Copy To Clipboard' }}</span>
+</button>
+<div class="json-editor-wrapper readonly">
+    <json-editor [data]="displayedSchema!" [options]="discoverSchemaEditorOpt"></json-editor>
+</div>

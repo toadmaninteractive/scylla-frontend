@@ -1,0 +1,34 @@
+<ng-container
+    *ngIf="{
+        menuIsCollapsed: menuIsCollapsed$.asObservable() | async
+} as x"
+>
+    <nz-layout class="layout">
+        <nz-sider nzCollapsible [nzTrigger]="null" [nzCollapsed]="x.menuIsCollapsed" [nzCollapsedWidth]="44">
+            <app-menu [collapsed]="x.menuIsCollapsed"></app-menu>
+            <button
+                nz-button
+                nzType="primary"
+                nzSize="default"
+                class="collapse-btn"
+                (click)="onMenuToggleCLick(x.menuIsCollapsed)"
+            >
+                <i nz-icon [class.collapsed]="x.menuIsCollapsed" nzType="double-left" nzTheme="outline"></i>
+            </button>
+        </nz-sider>
+
+        <nz-layout>
+            <nz-header>
+                <app-header></app-header>
+            </nz-header>
+
+            <nz-content class="inner-layout" [@routingAnimation]="prepareRoute(outlet)">
+                <router-outlet #outlet="outlet"></router-outlet>
+            </nz-content>
+
+            <nz-footer class="footer">
+                <app-footer></app-footer>
+            </nz-footer>
+        </nz-layout>
+    </nz-layout>
+</ng-container>

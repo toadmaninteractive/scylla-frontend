@@ -1,0 +1,39 @@
+::ng-deep {
+    .collapsed > svg {
+        transform: scaleX(-1);
+    }
+}
+
+.ant-layout-sider {
+    z-index: 1;
+}
+
+.ant-layout-header {
+    z-index: 1;
+    height: var(--header-height);
+    padding: 0 12px;
+}
+
+.layout {
+    min-height: 100vh;
+}
+
+.inner-layout {
+    position: relative;
+    padding: 0;
+    max-height: calc(100vh - 96px);
+    overflow: auto;
+}
+
+.collapse-btn {
+    position: fixed;
+    left: 6px;
+    bottom: 12px;
+}
+
+.footer {
+    padding: 17px 12px;
+    background: #ffffff;
+    filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));
+    z-index: 1;
+}

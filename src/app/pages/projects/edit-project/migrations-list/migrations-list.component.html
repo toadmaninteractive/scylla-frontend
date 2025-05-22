@@ -1,0 +1,162 @@
+<ng-container *ngIf="{ migrations: migrations$.asObservable() | async } as x">
+    <div>
+        <nz-table #nzTable [nzData]="x.migrations" nzTableLayout="fixed">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="180px">When</th>
+                    <th nzWidth="200px">Events</th>
+                    <th>Fields</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <ng-container
+                            *ngIf="data.changedSuperFields?.length || data.changedEvents?.length else emptyCell"
+                        >
+                            <td
+                                (nzExpandChange)="onExpandChange(data.id, $event)"
+                                [nzExpand]="expandedSet.has(data.id)"
+                            ></td>
+                        </ng-container>
+
+                        <td>{{ data.createdAt | date: 'YYYY-MM-dd HH:mm' }}</td>
+
+                        <td>
+                            {{ data.eventsCount }}
+                            <ng-container *ngIf="data.newEvents?.length > 0">
+                                <span class="c-green"> &nbsp;&plus;{{ data.newEvents.length }} </span>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.removedEvents?.length > 0">
+                                <span class="c-red"> &nbsp;&minus;{{ data.removedEvents.length }} </span>
+                            </ng-container>
+                        </td>
+
+                        <td>
+                            {{ data.allFields?.length }}
+                            <ng-container *ngIf="data.addedFields?.length > 0">
+                                <span class="c-green"> &nbsp;&plus;{{ data.addedFields.length }} </span>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.removedFields?.length > 0">
+                                <span class="c-red"> &nbsp;&minus;{{ data.removedFields.length }} </span>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.changedFields?.length > 0">
+                                <span class="c-navy"> &nbsp;&#x2733;{{ data.changedFields.length }} </span>
+                            </ng-container>
+                        </td>
+                    </tr>
+
+                    <ng-container *ngIf="data.changedSuperFields?.length || data.changedEvents?.length">
+                        <tr [nzExpand]="expandedSet.has(data.id)">
+                            <div class="row-header" nz-row style="margin-left: 24px">
+                                <div nz-col nzSpan="6">Name</div>
+                                <div nz-col nzSpan="2">Kind</div>
+                                <div nz-col nzSpan="2">Type</div>
+                                <div nz-col nzSpan="2">Default</div>
+                            </div>
+
+                            <nz-collapse nzExpandIconPosition="left" nzGhost="true">
+                                <nz-collapse-panel
+                                    #panel
+                                    *ngIf="data.changedSuperFields?.length"
+                                    nzHeader="Super properties"
+                                >
+                                    <ng-container *ngFor="let event of data.changedSuperFields">
+                                        <div
+                                            *ngIf="data.newSuperFields.has(event.name) || data.removedSuperFields.has(event.name)"
+                                            [class.c-green]="data.newSuperFields.has(event.name)"
+                                            [class.c-red]="data.removedSuperFields.has(event.name)"
+                                            nz-row
+                                            style="margin-left: 24px"
+                                        >
+                                            <div nz-col nzSpan="6">
+                                                {{ data.newSuperFields.has(event.name) ? '&plus;' : '&minus;' }} {{
+                                                event.name }}
+                                            </div>
+
+                                            <div nz-col nzSpan="2">{{ event.kind }}</div>
+                                            <div nz-col nzSpan="2">{{ event.type }}</div>
+                                            <div nz-col nzSpan="2">{{ event.default }}</div>
+                                        </div>
+                                    </ng-container>
+                                </nz-collapse-panel>
+
+                                <nz-collapse-panel *ngFor="let event of data.allEvents" [nzHeader]="event[0]">
+                                    <ng-container *ngFor="let field of event[1]">
+                                        <div
+                                            *ngIf="data.changedFieldsSet.has(field.name) || data.removedFieldsSet.has(field.name) || data.addedFieldsSet.has(field.name)"
+                                            [class.c-green]="data.newSuperFields.has(field.name) || data.addedFieldsSet.has(field.name)"
+                                            [class.c-navy]="data.changedFieldsSet.has(field.name)"
+                                            [class.c-red]="data.removedSuperFields.has(field.name) || data.removedFieldsSet.has(field.name)"
+                                            nz-row
+                                            style="margin-left: 24px"
+                                        >
+                                            <div nz-col nzSpan="6">
+                                                <ng-container
+                                                    *ngIf="data.newSuperFields.has(field.name) || data.addedFieldsSet.has(field.name)"
+                                                >
+                                                    <span style="margin-left: 3px">&plus;</span>
+                                                    <span style="margin-left: 5px">{{ field.name }}</span>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="data.removedSuperFields.has(field.name) || data.removedFieldsSet.has(field.name)"
+                                                >
+                                                    <span style="margin-left: 3px">&minus; </span>
+                                                    <span style="margin-left: 5px">{{ field.name }}</span>
+                                                </ng-container>
+                                                <ng-container *ngIf="data.changedFieldsSet.has(field.name)">
+                                                    <span>&#x2733;</span> {{ field.name }}
+                                                </ng-container>
+                                            </div>
+
+                                            <div nz-col nzSpan="2">
+                                                <ng-container
+                                                    *ngIf="data.changedPropsMap.has(field.name)&& data.changedPropsMap.get(field.name).indexOf('kind')>0"
+                                                >
+                                                    <del>{{ data.uniquePrevFieldsMap.get(field.name).kind }}</del>
+                                                </ng-container>
+                                                {{ data.uniqueFieldsMap.get(field.name)?.kind || field.kind }}
+                                            </div>
+
+                                            <div nz-col nzSpan="2">
+                                                <ng-container
+                                                    *ngIf="data.changedPropsMap.has(field.name)&& data.changedPropsMap.get(field.name).indexOf('type')>0"
+                                                >
+                                                    <del>{{ data.uniquePrevFieldsMap.get(field.name).type }}</del>
+                                                </ng-container>
+
+                                                {{ data.uniqueFieldsMap.get(field.name)?.type || field.type }}
+                                            </div>
+
+                                            <div nz-col nzSpan="2">
+                                                <ng-container
+                                                    *ngIf="data.changedPropsMap.has(field.name)&& data.changedPropsMap.get(field.name).indexOf('default')>0"
+                                                >
+                                                    <del>{{ data.uniquePrevFieldsMap.get(field.name).default }}</del>
+                                                </ng-container>
+                                                {{ data.uniqueFieldsMap.get(field.name)?.default || field.default }}
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </nz-collapse-panel>
+                            </nz-collapse>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </nz-table>
+    </div>
+</ng-container>
+
+<ng-template #expandedIcon let-active>
+    <span *ngIf="active" nz-icon nzTheme="outline" nzType="plus"></span>
+    <span *ngIf="!active" nz-icon nzTheme="outline" nzType="minus"></span>
+</ng-template>
+
+<ng-template #emptyCell>
+    <td></td>
+</ng-template>

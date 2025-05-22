@@ -1,0 +1,157 @@
+<ng-container
+    *ngIf="{
+        loader: loader$.asObservable() | async,
+        events: displayedEvents$.asObservable() | async,
+        schema: schema$.asObservable() | async,
+        showPristineEvent: showPristineEvent$.asObservable() | async,
+        sneakPeekEvents: displayedSneakPeekEvents$.asObservable() | async,
+        changed: changed$.asObservable() | async,
+        hasError: hasError$.asObservable() | async,
+        filterControl: filterControl.valueChanges | async
+} as x"
+>
+    <div class="card-container">
+        <ng-container *ngIf="!x.loader else loader">
+            <nz-tabset nzType="card">
+                <nz-tab nzTitle="Events">
+                    <header class="tab-header">
+                        <input
+                            #filter
+                            [formControl]="filterControl"
+                            class="filter-input"
+                            nz-input
+                            placeholder="Filter events"
+                            type="text"
+                        />
+                    </header>
+
+                    <div class="collapse-wrapper">
+                        <ng-container *ngIf="x.events.length !== 0 || !filter.value;else noMatchedEvents">
+                            <nz-collapse *ngFor="let event of x.events" [nzGhost]="true">
+                                <nz-collapse-panel [nzHeader]="event[0]" [nzShowArrow]="true">
+                                    <nz-table
+                                        #basicTable
+                                        nzSize="small"
+                                        [nzData]="event[1]"
+                                        [nzFrontPagination]="false"
+                                        class="custom-table"
+                                        nzBordered
+                                    >
+                                        <thead>
+                                            <tr>
+                                                <th nzWidth="390px">Field</th>
+                                                <th>Kind</th>
+                                                <th>Type</th>
+                                                <th nzWidth="565px">Default</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let data of basicTable.data">
+                                                <td>{{ data.name }}</td>
+                                                <td>{{ data.kind }}</td>
+                                                <td>{{ data.type }}</td>
+                                                <td>{{ data.default }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </nz-table>
+                                </nz-collapse-panel>
+                            </nz-collapse>
+                        </ng-container>
+                    </div>
+                </nz-tab>
+
+                <nz-tab nzTitle="Discover Schema">
+                    <button
+                        (click)="copyToClipboard()"
+                        [class.copy-btn_disabled]="copyNotification"
+                        [nz-tooltip]="copyNotification ? 'Copied!' : 'Copy To Clipboard'"
+                        class="copy-btn copy-btn_editor-position"
+                        nz-button
+                        nzType="primary"
+                    >
+                        <i [nzType]="copyNotification ? 'check' : 'copy'" nz-icon nzTheme="outline"></i>
+                        <span>{{ copyNotification ? 'Copied!' : 'Copy To Clipboard' }}</span>
+                    </button>
+                    <div class="json-editor-wrapper readonly">
+                        <json-editor [data]="displayedSchema!" [options]="discoverSchemaEditorOpt"></json-editor>
+                    </div>
+                </nz-tab>
+
+                <nz-tab nzTitle="Upload Schema">
+                    <header class="tab-header">
+                        <button
+                            (click)="isActiveModal = true"
+                            [disabled]="!x.changed || x.hasError"
+                            class="schema-btn"
+                            nz-button
+                            nzType="primary"
+                        >
+                            Update schema
+                        </button>
+
+                        <nz-upload (nzChange)="uploadJsonFile($event)" [nzShowUploadList]="false">
+                            <button nz-button>
+                                <i nz-icon nzType="upload"></i>
+                                Upload from file
+                            </button>
+                        </nz-upload>
+                    </header>
+
+                    <div class="json-editor-wrapper upload">
+                        <nz-upload
+                            (nzChange)="uploadJsonFile($event)"
+                            [nzOpenFileDialogOnClick]="false"
+                            [nzShowUploadList]="false"
+                            nzType="drag"
+                        >
+                            <json-editor
+                                #uploadEditor
+                                [class.has-error]="x.hasError"
+                                [data]="uploadedSchema"
+                                [options]="uploadEditorOpt"
+                            ></json-editor>
+                        </nz-upload>
+                    </div>
+                </nz-tab>
+
+                <nz-tab nzTitle="Sneak Peek">
+                    <header class="tab-header">
+                        <nz-input-number
+                            class="input input-count input-margin"
+                            [formControl]="eventNumber"
+                            [nzMin]="1"
+                            [nzMax]="100"
+                            [nzStep]="5"
+                        ></nz-input-number>
+
+                        <input
+                            class="input input-filter"
+                            nz-input
+                            placeholder="Filter"
+                            [formControl]="filterSneakPeekControl"
+                        />
+                    </header>
+
+                    <div class="json-editor-wrapper sneak-peek">
+                        <json-editor [data]="x.sneakPeekEvents" [options]="sneakPeekEditorOpt"></json-editor>
+                    </div>
+                </nz-tab>
+            </nz-tabset>
+        </ng-container>
+    </div>
+
+    <nz-modal
+        (nzOnCancel)="isActiveModal = false"
+        (nzOnOk)="sendSchema(x.schema, project.id)"
+        [(nzVisible)]="isActiveModal"
+        nzTitle="Are you sure you want to update the schema?"
+    ></nz-modal>
+</ng-container>
+
+<ng-template #loader>
+    <nz-card class="spinner-wrapper h-full overflow-auto" nzSize="small">
+        <nz-spin nzSimple nzSize="large"></nz-spin>
+    </nz-card>
+</ng-template>
+
+<ng-template #noMatchedEvents> No matches </ng-template>

@@ -1,0 +1,123 @@
+<ng-container
+    *ngIf="{
+        clickhouseCode: clickhouseCode$.asObservable() | async,
+        isChanged: isChanged$.asObservable() | async,
+        patch: patch$.asObservable() | async
+} as x"
+>
+    <nz-card
+        class="h-full overflow-auto"
+        nzSize="small"
+        nzTitle="{{ x.clickhouseCode ? 'Edit instance' : 'Create instance' }}"
+    >
+        <form [formGroup]="form" [nzLayout]="'vertical'" [nzMd]="12" [nzSm]="24" [nzXXl]="6" [nzXl]="9" nz-col nz-form>
+            <nz-form-item>
+                <nz-form-label nzFor="name" nzRequired nzSpan="24">
+                    <span>Name</span>
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="form.get(field.Name)"
+                    nzErrorTip="Name field shouldn't be empty"
+                    nzSpan="24"
+                >
+                    <input [formControlName]="field.Name" id="name" nz-input />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="code" nzRequired nzSpan="24">
+                    <span>Code</span>
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="form.get(field.Code)"
+                    nzErrorTip="Code field shouldn't be empty"
+                    nzSpan="24"
+                >
+                    <input [formControlName]="field.Code" id="code" nz-input />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="url" nzRequired nzSpan="24">
+                    <span>Server URL</span>
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="form.get(field.Uri)"
+                    nzErrorTip="Server Url shouldn't be empty"
+                    nzSpan="24"
+                    nzWarningTip="Incorrect server url"
+                >
+                    <input [formControlName]="field.Uri" id="url" nz-input />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="clickhouseUsername" nzRequired nzSpan="24">
+                    <span>Username</span>
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="form.get(field.Username)"
+                    nzErrorTip="Please input your username"
+                    nzSpan="24"
+                >
+                    <input
+                        [formControlName]="field.Username"
+                        autocomplete="new-password"
+                        id="clickhouseUsername"
+                        nz-input
+                    />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="clickhousePassword" nzRequired nzSpan="24">
+                    <span>Password</span>
+                </nz-form-label>
+                <nz-form-control
+                    [nzValidateStatus]="form.get(field.Password)"
+                    nzDisableAutoTips
+                    nzErrorTip="Please input your password"
+                    nzSpan="24"
+                >
+                    <nz-input-group [nzSuffix]="suffixTemplate">
+                        <input
+                            [formControlName]="field.Password"
+                            [type]="passwordVisible ? 'text' : 'password'"
+                            autocomplete="new-password"
+                            id="clickhousePassword"
+                            nz-input
+                            type="password"
+                        />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nzFor="chUrl" nzRequired nzSpan="24">
+                    <span>ClickHouse URL</span>
+                </nz-form-label>
+                <nz-form-control nzSpan="24">
+                    <input [disabled]="true" [formControlName]="field.CHurl" id="chUrl" nz-input />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzSpan="8">
+                    <button
+                        (click)="sendRequest(x.patch, x.clickhouseCode)"
+                        [disabled]="!x.isChanged ||  !this.form.valid"
+                        nz-button
+                        nzBlock
+                        nzType="primary"
+                    >
+                        {{ x.clickhouseCode ? 'Update' : 'Create' }}
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-card>
+</ng-container>
+
+<ng-template #suffixTemplate>
+    <i (click)="passwordVisible = !passwordVisible" [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" nz-icon></i>
+</ng-template>

@@ -1,0 +1,59 @@
+.masked-icon {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    background-color: var(--strong-grey);
+
+    // Icons sizes
+    &_xl {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        min-height: 30px;
+    }
+
+    &_l {
+        width: 26px;
+        height: 26px;
+        min-width: 26px;
+        min-height: 26px;
+    }
+
+    &_m {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+    }
+
+    &_s {
+        width: 22px;
+        height: 22px;
+        min-width: 22px;
+        min-height: 22px;
+    }
+
+    // Icons masks
+
+    &_eye-open {
+        mask: url("../assets/icons/eye-open.svg") no-repeat center / contain;
+    }
+
+    &_eye-cross {
+        mask: url("../assets/icons/eye-cross.svg") no-repeat center / contain;
+    }
+
+    &_lock {
+        mask: url("../assets/icons/lock.svg") no-repeat center / contain;
+    }
+
+    &_user {
+        mask: url("../assets/icons/user.svg") no-repeat center / contain;
+    }
+
+    &_exclamation {
+        mask: url("../assets/icons/exclamation.svg") no-repeat center / contain;
+    }
+}

@@ -1,0 +1,34 @@
+<ng-container
+    *ngIf="{
+    currentMenuItem: currentMenuItem$.asObservable() | async
+} as x"
+>
+    <div class="menu flex-column">
+        <header class="menu__header">
+            <a class="main-logo" routerLink="/">
+                <ng-container *ngIf="collapsed">
+                    <span class="logo">S</span>
+                </ng-container>
+                <ng-container *ngIf="!collapsed">
+                    <span class="logo">Scylla</span>
+                    <span class="version">v 1.0</span>
+                </ng-container>
+            </a>
+        </header>
+        <ul [nzInlineCollapsed]="collapsed" nz-menu nzMode="inline" nzTheme="dark">
+            <li
+                *ngFor="let item of menuItems"
+                [nzTooltipTitle]="collapsed ? item.title : ''"
+                [routerLink]="['/', item.link]"
+                class="menu-item"
+                nz-menu-item
+                nz-tooltip=""
+                nzSelected="{{item.link === x.currentMenuItem}}"
+                nzTooltipPlacement="right"
+            >
+                <i [cacheSVG]="true" class="menu-item__icon anticon" inlineSVG="./assets/icons/{{ item.icon }}.svg"></i>
+                <span class="menu-item__title">{{ item.title }}</span>
+            </li>
+        </ul>
+    </div>
+</ng-container>

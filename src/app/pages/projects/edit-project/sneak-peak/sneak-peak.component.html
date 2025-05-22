@@ -1,0 +1,17 @@
+<ng-container *ngIf="{ sneakPeekEvents: displayedSneakPeekEvents$.asObservable() | async} as x">
+    <header class="tab-header">
+        <nz-input-number
+            [formControl]="eventNumber"
+            [nzMax]="10000"
+            [nzMin]="1"
+            [nzStep]="100"
+            class="input input-count"
+        ></nz-input-number>
+
+        <input [formControl]="filterSneakPeekControl" class="filter-input" nz-input placeholder="Filter" />
+    </header>
+
+    <div class="json-editor-wrapper sneak-peek">
+        <json-editor [data]="x.sneakPeekEvents" [options]="sneakPeekEditorOpt"></json-editor>
+    </div>
+</ng-container>

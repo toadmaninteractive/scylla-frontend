@@ -1,0 +1,62 @@
+<ng-container *ngIf="{ events: displayedEvents$.asObservable() | async } as x">
+    <header class="tab-header">
+        <input
+            #filter
+            [formControl]="filterControl"
+            class="filter-input"
+            nz-input
+            placeholder="Filter events"
+            type="text"
+        />
+    </header>
+
+    <div class="collapse-wrapper">
+        <ng-container *ngIf="x.events.length !== 0 || !filter.value;else noMatchedEvents">
+            <nz-collapse *ngFor="let event of x.events" [nzGhost]="true">
+                <nz-collapse-panel [nzHeader]="event[0]" [nzShowArrow]="true">
+                    <nz-table
+                        #basicTable
+                        [nzData]="event[1]"
+                        [nzFrontPagination]="false"
+                        class="custom-table"
+                        nzBordered
+                        nzSize="small"
+                    >
+                        <thead>
+                            <tr>
+                                <th nzWidth="390px">Field</th>
+                                <th>Kind</th>
+                                <th>Type</th>
+                                <th nzWidth="565px">Default</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let data of getEventVariantField(basicTable.data)">
+                                <tr class="super-properties">
+                                    <td>{{ data.name }}</td>
+                                    <td>{{ data.kind }}</td>
+                                    <td>{{ data.type }}</td>
+                                    <td>{{ data.default }}</td>
+                                </tr>
+                            </ng-container>
+                            <tr>
+                                <td colspan="4"></td>
+                            </tr>
+
+                            <ng-container *ngFor="let data of basicTable.data">
+                                <tr *ngIf="!variantKeysSet.has(data.name)">
+                                    <td>{{ data.name }}</td>
+                                    <td>{{ data.kind }}</td>
+                                    <td>{{ data.type }}</td>
+                                    <td>{{ data.default }}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </nz-table>
+                </nz-collapse-panel>
+            </nz-collapse>
+        </ng-container>
+    </div>
+</ng-container>
+
+<ng-template #noMatchedEvents> No matches</ng-template>

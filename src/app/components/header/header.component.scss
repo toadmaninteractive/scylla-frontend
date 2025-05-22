@@ -1,0 +1,36 @@
+.main-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    gap: 8px;
+    justify-content: space-between;
+
+    &_reverse {
+        flex-direction: row-reverse;
+    }
+}
+
+::ng-deep .ant-breadcrumb-link a {
+    color: whitesmoke !important;
+}
+
+::ng-deep .ant-breadcrumb-separator {
+    color: whitesmoke !important;
+}
+
+.breadcrumbs {
+    color: whitesmoke;
+
+    .breadcrumb-link {
+        color: whitesmoke;
+        text-decoration: underline;
+
+        &:last-child {
+            cursor: unset;
+            text-decoration: none;
+        }
+    }
+
+
+}

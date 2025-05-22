@@ -1,0 +1,50 @@
+<ng-container
+    *ngIf="{
+    changed: changed$.asObservable() | async,
+    hasError: hasError$.asObservable() | async,
+    project: project$.asObservable() | async,
+    schema: localSchema$.asObservable() | async } as x"
+>
+    <header class="tab-header">
+        <button
+            (click)="isActiveModal = true"
+            [disabled]="!x.changed || x.hasError"
+            class="schema-btn"
+            nz-button
+            nzType="primary"
+        >
+            Update schema
+        </button>
+
+        <nz-upload (nzChange)="uploadJsonFile($event)" [nzShowUploadList]="false">
+            <button nz-button>
+                <i nz-icon nzType="upload"></i>
+                Upload from file
+            </button>
+        </nz-upload>
+    </header>
+
+    <div class="json-editor-wrapper upload">
+        <nz-upload
+            (nzChange)="uploadJsonFile($event)"
+            [nzOpenFileDialogOnClick]="false"
+            [nzShowUploadList]="false"
+            nzType="drag"
+        >
+            <json-editor
+                #uploadEditor
+                [class.has-error]="x.hasError"
+                [data]="uploadedSchema"
+                [options]="uploadEditorOpt"
+            ></json-editor>
+        </nz-upload>
+    </div>
+
+    <nz-modal
+        (nzOnCancel)="isActiveModal = false"
+        (nzOnOk)="sendSchema(x.schema, x.project.id)"
+        *ngIf="x.schema && x.project"
+        [(nzVisible)]="isActiveModal"
+        nzTitle="Are you sure you want to update the schema?"
+    ></nz-modal>
+</ng-container>

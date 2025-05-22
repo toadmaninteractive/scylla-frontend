@@ -1,0 +1,31 @@
+.pl {
+    background-color: tomato;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &__element {
+        width: 20px;
+        height: 20px;
+        background: hsl(168, 57%, 48%);
+        border-radius: 20px;
+        outline: 1px solid hsl(234 20% 19% / 0.1);
+        animation: snake 1s infinite;
+    }
+}
+
+@keyframes snake {
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@for $i from 1 through 7 {
+    .pl__element:nth-child(#{$i}) {
+        animation-delay: 0.3 * $i + s;
+    }
+}

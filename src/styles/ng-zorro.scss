@@ -1,0 +1,50 @@
+.h-full {
+    height: 100%;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+// Login form restyle
+
+#login-form {
+
+    .login-form__item {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        outline: 1px solid red;
+    }
+
+    .login-form__label {
+        position: absolute;
+        top: 16px;
+        left: 56px;
+        padding: 0;
+        z-index: 2;
+    }
+
+    .login-form__input-group {
+        padding: 20px 20px 20px 16px;
+        background-color: var(--grey);
+
+        &:focus-visible {
+            background-color: transparent;
+        }
+    }
+
+    .login-form__input {
+        background-color: var(--grey);
+        height: 24px;
+        margin-top: auto;
+
+        &:focus-visible {
+            background-color: transparent;
+        }
+
+        &::placeholder {
+            color: transparent;
+        }
+    }
+}

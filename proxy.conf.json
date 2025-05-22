@@ -1,0 +1,26 @@
+{
+    "/auth": {
+        "target": "https://ingest.yourcompany.com/auth",
+        "secure": true,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/auth": ""
+        }
+    },
+    "/manage": {
+        "target": "https://ingest.yourcompany.com/manage",
+        "secure": true,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/manage": ""
+        }
+    },
+    "/ingest": {
+        "target": "https://ingest.yourcompany.com/ingest",
+        "secure": true,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/ingest": ""
+        }
+    }
+}

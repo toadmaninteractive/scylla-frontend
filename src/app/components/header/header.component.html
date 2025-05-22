@@ -1,0 +1,15 @@
+<ng-container *ngIf="{ breadcrumbs: breadcrumbsService.breadcrumbs$.asObservable() | async } as x">
+    <header class="main-header">
+        <div class="breadcrumbs">
+            <ng-container *ngFor="let br of x.breadcrumbs; let i = index">
+                <a [routerLink]="getLink(x.breadcrumbs, i, br.label)" class="breadcrumb-link"> {{ br.label }} </a>
+                <span *ngIf="i < x.breadcrumbs.length - 1">&nbsp;/&nbsp;</span>
+            </ng-container>
+        </div>
+
+        <button (click)="signOut()" nz-button nzType="primary">
+            Log Out
+            <i nz-icon nzTheme="outline" nzType="logout"></i>
+        </button>
+    </header>
+</ng-container>

@@ -1,0 +1,11 @@
+.table-header {
+    user-select: none;
+
+    &_disable {
+        pointer-events: none;
+
+        .ant-table-column-sorter {
+            display: none;
+        }
+    }
+}

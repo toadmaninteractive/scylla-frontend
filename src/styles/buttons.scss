@@ -1,0 +1,36 @@
+.button {
+    width: fit-content;
+    height: fit-content;
+    padding: 12px 32px;
+    border: none;
+    background-color: transparent;
+    font-family: "Roboto", sans-serif;
+    color: var(--black);
+    cursor: pointer;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+
+    &_blue-rounded {
+        transition: background-color 125ms, color 125ms;
+        color: var(--white);
+        background-color: var(--blue);
+        border-radius: var(--rounded-50);
+
+        &:hover {
+            color: var(--white);
+            background-color: var(--bright-blue);
+        }
+
+        &:disabled {
+            color: var(--dark-grey);
+            background-color: var(--grey);
+        }
+    }
+    
+    &:disabled {
+        cursor: not-allowed;
+    }
+}

@@ -1,0 +1,10 @@
+:host ::ng-deep .form-card {
+    .mat-form-field-appearance-fill .mat-form-field-wrapper {
+        margin-bottom: 0;
+    }
+}
+
+.form-card {
+    width: 35%;
+    padding: 36px 18px 18px 18px;
+}

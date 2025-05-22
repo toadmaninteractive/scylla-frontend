@@ -1,0 +1,17 @@
+<div class="main-layout">
+    <div class="menu-component">
+        <app-menu></app-menu>
+    </div>
+
+    <div class="header-component">
+        <app-header></app-header>
+    </div>
+
+    <main class="main-content container-l" [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+    </main>
+
+    <div class="footer-component">
+        <app-footer></app-footer>
+    </div>
+</div>

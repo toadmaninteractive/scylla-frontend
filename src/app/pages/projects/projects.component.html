@@ -1,0 +1,133 @@
+<ng-container
+    *ngIf="{
+        projectsDisplayed: projectsDisplayed$.asObservable() | async
+} as x"
+>
+    <nz-card [nzExtra]="createBtn" class="h-full overflow-auto" nzSize="small" nzTitle="Projects">
+        <ng-container *ngIf="x.projectsDisplayed">
+            <nz-table
+                #basicTable
+                [nzData]="x.projectsDisplayed"
+                [nzFrontPagination]="false"
+                [nzScroll]="{x: 'true'}"
+                [nzWidthConfig]="widthConfig"
+                nzSize="small"
+            >
+                <thead>
+                    <tr>
+                        <th
+                            *ngFor="let col of displayedColumns"
+                            [class.table-header_disable]="!col.sortFn  || x.projectsDisplayed.length < 2"
+                            [nzSortDirections]="col.sortDirections"
+                            [nzSortFn]="col.sortFn"
+                            [nzSortOrder]="col.sortOrder"
+                            class="table-header"
+                        >
+                            {{ col.name }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let project of basicTable.data">
+                        <td><a routerLink="{{ project.code }}/preferences">{{ project.name }}</a></td>
+
+                        <td>{{ project.code }}</td>
+
+                        <td>
+                            <a routerLink="{{ project.code }}/events"> {{ eventMap.get(project.id) || 0 }} events </a>
+                        </td>
+
+                        <td>
+                            <div class="info-db">
+                                <p class="db-name">
+                                    <i
+                                        [cacheSVG]="true"
+                                        class="menu-item__icon anticon"
+                                        inlineSVG="./assets/icons/clickhouse.svg"
+                                    ></i>
+                                    {{ project.clickhouseName }}
+                                    <span style="opacity: .5; font-size: 125%">&raquo;</span> {{ project.clickhouseDb }}
+                                </p>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="properties-tags-group">
+                                <nz-tag
+                                    [nzColor]="project.eventValidation === eventValidationEnum.Strict ? '#87d068' : project.eventValidation === eventValidationEnum.Warn ? '#ff8c00' : 'default'"
+                                    [nzTooltipTitleContext]="{title: 'Event Validation' , text: 'Check event field data types and values against the Schema, drop events containing invalid fields.', enabled: project.eventValidation}"
+                                    [nzTooltipTitle]="eventValidationTooltip"
+                                    class="properties-tag"
+                                    nz-tooltip
+                                >
+                                    E
+                                </nz-tag>
+
+                                <nz-tag
+                                    [nzColor]="project.preserveDbColumns ? '#87d068' : 'default'"
+                                    [nzTooltipTitleContext]="{title: 'Preserve Database Columns' , text: 'Keep columns in a database when they are no longer exist in the Schema.', enabled: project.preserveDbColumns}"
+                                    [nzTooltipTitle]="tagTooltip"
+                                    class="properties-tag"
+                                    nz-tooltip
+                                >
+                                    P
+                                </nz-tag>
+
+                                <nz-tag
+                                    [nzColor]="project.backupMode ? '#87d068' : 'default'"
+                                    [nzTooltipTitleContext]="{title: 'Backup Mode' , text: 'Keep a copy of a column (under different name) when its data type changes.', enabled: project.backupMode}"
+                                    [nzTooltipTitle]="tagTooltip"
+                                    class="properties-tag"
+                                    nz-tooltip
+                                >
+                                    B
+                                </nz-tag>
+                            </div>
+                        </td>
+
+                        <td>{{ project.createdAt | date: 'YYYY-MM-dd HH:mm' }}</td>
+
+                        <td>{{ project.updatedAt | date: 'YYYY-MM-dd HH:mm' }}</td>
+
+                        <td>
+                            <a (click)="onDelete(project)" class="delete-link">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </ng-container>
+    </nz-card>
+</ng-container>
+
+<ng-template #createBtn>
+    <div class="control-elements">
+        <input [formControl]="projectsFilter" class="filter-input" id="name" nz-input placeholder="Filter" />
+        <button nz-button nzType="primary" routerLink="create">Create</button>
+    </div>
+</ng-template>
+
+<ng-template #eventValidationTooltip let-enabled="enabled" let-text="text" let-title="title">
+    <strong>{{ title }}</strong>&nbsp;({{ enabled === eventValidationEnum.Strict ? 'strict' : enabled ===
+    eventValidationEnum.Warn ? 'warning' : 'none' }})
+
+    <br />
+
+    <ng-container [ngSwitch]="enabled">
+        <ng-container *ngSwitchCase="eventValidationEnum.Strict">
+            Validate events against the Schema, log errors, and drop invalid events. Pass valid ones to ClickHouse.
+        </ng-container>
+
+        <ng-container *ngSwitchCase="eventValidationEnum.Warn">
+            Validate events against the Schema, log errors. Pass them through to ClickHouse AS IS.
+        </ng-container>
+
+        <ng-container *ngSwitchCase="eventValidationEnum.None">
+            Do not validate events against the Schema. Pass them through to ClickHouse AS IS.
+        </ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #tagTooltip let-enabled="enabled" let-text="text" let-title="title">
+    <strong>{{ title }}</strong>&nbsp;({{ enabled ? 'enabled' : 'disabled' }}) <br />
+    {{ text }}
+</ng-template>
