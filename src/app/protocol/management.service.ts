@@ -14,7 +14,7 @@ import * as WebProtocol from './web';
     providedIn: 'root',
 })
 export class ScyllaManagementService {
-    public baseUrl = 'https://ingest.yourcompany.com/manage';
+    public baseUrl = '';
 
     constructor(private http: HttpClient) { }
 

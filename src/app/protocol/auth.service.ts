@@ -14,7 +14,7 @@ import * as DataProtocol from './data';
     providedIn: 'root',
 })
 export class ScyllaAuthService {
-    public baseUrl = 'https://ingest.yourcompany.com/auth';
+    public baseUrl = '';
 
     constructor(private http: HttpClient) { }
 
