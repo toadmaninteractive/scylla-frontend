@@ -15,7 +15,7 @@ import * as IgorSchema from './schema';
     providedIn: 'root',
 })
 export class ScyllaIngestionService {
-    public baseUrl = '';
+    public baseUrl = '/ingest';
 
     constructor(private http: HttpClient) { }
 
